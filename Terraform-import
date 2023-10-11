@@ -1,0 +1,121 @@
+ 
+
+Terraform import  
+
+provider "aws" { 
+
+region = "af-south-1" 
+
+} 
+
+resource "aws_vpc" "vpc-import" { 
+
+cidr_block       = "10.0.0.0/24" 
+
+  instance_tenancy = "default" 
+
+  tags = { 
+
+    Name = "my-vpc-demo" 
+
+  } 
+
+} 
+
+  
+
+#terrafrom import aws_vpc.vpc-import  <vpc-id> 
+
+  
+
+then create the EC2 instance  
+
+  
+
+provider "aws" { 
+
+  region = "af-south-1" 
+
+} 
+
+  
+
+resource "aws_instance" "myec2" { 
+
+   ami = "ami-0eafd7a0199dde80a" 
+
+   instance_type = "t3.micro" 
+
+} 
+
+then  
+
+#terraform init 
+
+then  
+
+terraform import aws_instance.myec2 i-0714e3f6a62c0f3bc 
+
+then update the file like  
+
+resource "aws_instance" "myec2" { 
+
+   ami = "ami-0eafd7a0199dde80a" 
+
+   instance_type = "t3.micro" 
+
+   tags { 
+
+      Name = "Demo-EC2" 
+
+   } 
+
+} 
+
+  
+
+then  
+
+#terraform apply --auto-approve  
+
+then we can see the changes in ec2 instance 
+
+
+
+
+============terraform import ============
+
+File name : main.tf 
+provider "aws" {
+	region = "us-east-1"
+}
+import {
+	id = "id number of instance"
+	to = aws_instance.example
+}
+(to = aws_instance.example (aws_instance = type of instance , name of instance =example))
+save it 
+then 
+#terraform init 
+then 
+#terraform plan -generate-config-out=generated_resource.tf 
+terraform will create generated_resource.tf with all information of ec2 instance which one you have to import 
+then  
+copy the content of file : generated_resource.tf 
+then 
+paste below 
+
+provider "aws" {
+	region = "us-east-1"
+}
+paste here 
+resource "aws_instance" "example " {
+	
+}
+then 
+#terrafomr plan 
+then we will get an error because there is no state file so do it like below
+#terraform import aws_instance.example id of ec2 instance 
+
+then 
+#terraform plan 
